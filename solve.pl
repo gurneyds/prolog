@@ -41,9 +41,22 @@ move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
 move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
   maze(Maze, Row, Col, Status),
   Status == open,
+  write('Row = '), write(Row),
+  write(' Col = '), write(Col),
+  write(' Found open'), nl,
   append(List, [[Row,Col]], AppendedList),
   NextCol is Col + 1,
   move(Maze, AppendedList, NewList, Row, NextCol, GoalRow, GoalColumn).
+
+move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
+    maze(Maze, Row, Col, Status),
+    Status == open,
+    write('Row = '), write(Row),
+    write(' Col = '), write(Col),
+    write(' Found open'), nl,
+    append(List, [[Row,Col]], AppendedList),
+    NextRow is Row + 1,
+    move(Maze, AppendedList, NewList, NextRow, Col, GoalRow, GoalColumn).
 
 
 % Hit a barrier, move right
