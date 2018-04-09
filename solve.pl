@@ -2,7 +2,7 @@
 move(_, List, NewList, Row, Col, GoalRow, GoalColumn) :-
   Row =:= GoalRow,
   Col =:= GoalColumn,
-  write('Goal found!!!!'), nl,
+  %write('Goal found!!!!'), nl,
   append(List, [[Row,Col]], NewList).
 
 % Found an open square, move down
@@ -81,10 +81,14 @@ hitBarrier(Maze, Row, Col) :-
   1 == 0. % Return false
 
 %-----------------------------------
-printCell(Maze, _, Row, Column) :-
+printCell(Maze, List, Row, Column) :-
   maze(Maze, Row, Column, barrier), write('x').
 
-printCell(Maze, _, Row, Column) :-
+printCell(Maze, List, Row, Column) :-
+  member([Row, Column], List),
+  maze(Maze, Row, Column, open), write('*').
+
+printCell(Maze, List, Row, Column) :-
   maze(Maze, Row, Column, open), write(' ').
 
 %-----------------------------------
@@ -113,45 +117,45 @@ printHeader(Maze, Col) :-
   write('+').
 
 %-----------------------------------
-printRow(Maze, Row, Col) :-
+printRow(Maze, List, Row, Col) :-
   Col =:= 0,
   write('|'),
-  printRow(Maze, Row, 1).
+  printRow(Maze, List, Row, 1).
 
-printRow(Maze, Row, Col) :-
+printRow(Maze, List, Row, Col) :-
   mazeSize(Maze, _, TotalCol),
   Col < TotalCol,
-  printCell(Maze, _, Row, Col),
+  printCell(Maze, List, Row, Col),
   NextCol is Col + 1,
-  printRow(Maze, Row, NextCol).
+  printRow(Maze, List, Row, NextCol).
 
-printRow(Maze, _, Col) :-
+printRow(Maze, List, _, Col) :-
   mazeSize(Maze, _, TotalCol),
   Col =:= TotalCol,
   write('|').
 
 %-----------------------------------
-printAllRows(Maze, Row) :-
+printAllRows(Maze, List, Row) :-
   Row =:= 0,
-  printRow(Maze, Row, 0), nl,
-  printAllRows(Maze, 1).
+  printRow(Maze, List, Row, 0), nl,
+  printAllRows(Maze, List, 1).
 
-printAllRows(Maze, Row) :-
+printAllRows(Maze, List, Row) :-
   mazeSize(Maze, TotalRows, _),
   Row =< TotalRows,
-  printRow(Maze, Row, 0), nl,
+  printRow(Maze, List, Row, 0), nl,
   Next is Row + 1,
-  printAllRows(Maze, Next).
+  printAllRows(Maze, List, Next).
 
-printAllRows(Maze, Row) :-
+printAllRows(Maze, List, Row) :-
   mazeSize(Maze, TotalRows, _),
-  Row == TotalRows.
+  Row >= TotalRows.
 
 %-----------------------------------
 printMaze(List, Maze) :-
   printHeader(Maze, 0), nl,
-  printAllRows(Maze, 1),
-  printHeader(Maze, 0), nl,
+  printAllRows(Maze, List, 1),
+%  printHeader(Maze, 0), nl,
   printList(List).
 
 %-----------------------------------
@@ -159,3 +163,5 @@ solve(Maze) :-
 	mazeSize(Maze, GoalRow, GoalColumn),
 	move(Maze, [], NewList, 1, 1, GoalRow, GoalColumn),
   printMaze(NewList, Maze).
+
+%[[1,1],[1,2],[1,3],[2,3],[3,3],[4,3],[4,4],[4,5],[4,6],[4,7]]
