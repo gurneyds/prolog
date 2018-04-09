@@ -163,3 +163,11 @@ printAllRows(Maze, Row) :-
         printRow(Maze, Row, 0), nl,
         Next is Row + 1,
         printAllRows(Maze, Next).
+
+%-----------------------------------
+printMaze(List, Maze) :-
+  printHeader(Maze, 0), nl,
+  printAllRows(Maze, 1),
+  printHeader(Maze, 0), nl,
+  printList(List),
+  write('done').
