@@ -32,7 +32,7 @@
 %   bound to the list of successful moves in a solved maze.
 
 % Arrived at goal
-move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
+move(_, List, NewList, Row, Col, GoalRow, GoalColumn) :-
   Row =:= GoalRow,
   Col =:= GoalColumn,
   append(List, [[Row,Col]], NewList).
@@ -84,90 +84,87 @@ move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
   move(Maze, List, NewList, R2, Col, GoalRow, GoalColumn).
 
 %----------------------
-solve(Maze) :-
-	mazeSize(Maze, GoalRow, GoalColumn),
-	move(Maze, [], NewList, 1, 1, GoalRow, GoalColumn),
-	write(NewList).
-
-
 % Helper predicate, return true if barrier is at Row, Col
 hitBarrier(Maze, Row, Col) :-
   maze(Maze, Row, Col, Status),
   Status == barrier.
 
-
 %-----------------------------------
 printCell(Maze, _, Row, Column) :-
-        maze(Maze, Row, Column, barrier), write('x').
+  maze(Maze, Row, Column, barrier), write('x').
+
 printCell(Maze, _, Row, Column) :-
-        maze(Maze, Row, Column, open), write(' ').
-
-%----------------------------------
-printMaze(Maze, _) :-
-        printHeader(Maze, 0),nl,
-        mazeSize(Maze, Rows, _),
-        printHeader(Maze, 0).
-
-%-----------------------------------
-
+  maze(Maze, Row, Column, open), write(' ').
 
 %-----------------------------------
 printList([]).
+
 printList([H|T]) :-
-        write(H),
-        printList(T).
+  write(H),
+  printList(T).
 
 %-----------------------------------
 printHeader(Maze, Col) :-
   Col =:= 0,
-        write('+'),
-        printHeader(Maze, 1).
+  write('+'),
+  printHeader(Maze, 1).
+
 printHeader(Maze, Col) :-
-        mazeSize(Maze,_,TotalCol),
-        Col < TotalCol,
-        write('-'),
-        Next is Col + 1,
-        printHeader(Maze, Next).
+  mazeSize(Maze,_,TotalCol),
+  Col < TotalCol,
+  write('-'),
+  Next is Col + 1,
+  printHeader(Maze, Next).
+
 printHeader(Maze, Col) :-
-        mazeSize(Maze,_,TotalCol),
-        Col =:= TotalCol,
-        write('+').
+  mazeSize(Maze,_,TotalCol),
+  Col =:= TotalCol,
+  write('+').
 
 %-----------------------------------
 printRow(Maze, Row, Col) :-
   Col =:= 0,
-        write('|'),
-        printRow(Maze, Row, 1).
+  write('|'),
+  printRow(Maze, Row, 1).
 
 printRow(Maze, Row, Col) :-
-        mazeSize(Maze, _, TotalCol),
-        Col < TotalCol,
-        printCell(Maze, _, Row, Col),
-        NextCol is Col + 1,
-        printRow(Maze, Row, NextCol).
+  mazeSize(Maze, _, TotalCol),
+  Col < TotalCol,
+  printCell(Maze, _, Row, Col),
+  NextCol is Col + 1,
+  printRow(Maze, Row, NextCol).
 
-printRow(Maze, Row, Col) :-
-        mazeSize(Maze, _, TotalCol),
-        Col =:= TotalCol,
-        write('|').
+printRow(Maze, _, Col) :-
+  mazeSize(Maze, _, TotalCol),
+  Col =:= TotalCol,
+  write('|').
 
 %-----------------------------------
 printAllRows(Maze, Row) :-
   Row =:= 0,
-        printRow(Maze, Row, 0), nl,
-        printAllRows(Maze, 1).
+  printRow(Maze, Row, 0), nl,
+  printAllRows(Maze, 1).
 
 printAllRows(Maze, Row) :-
-        mazeSize(Maze, TotalRows, _),
-  		Row =< TotalRows,
-        printRow(Maze, Row, 0), nl,
-        Next is Row + 1,
-        printAllRows(Maze, Next).
+  mazeSize(Maze, TotalRows, _),
+  Row =< TotalRows,
+  printRow(Maze, Row, 0), nl,
+  Next is Row + 1,
+  printAllRows(Maze, Next).
+
+printAllRows(Maze, Row) :-
+  mazeSize(Maze, TotalRows, _),
+  Row == TotalRows.
 
 %-----------------------------------
 printMaze(List, Maze) :-
   printHeader(Maze, 0), nl,
   printAllRows(Maze, 1),
   printHeader(Maze, 0), nl,
-  printList(List),
-  write('done').
+  printList(List).
+
+%-----------------------------------
+solve(Maze) :-
+	mazeSize(Maze, GoalRow, GoalColumn),
+	move(Maze, [], NewList, 1, 1, GoalRow, GoalColumn),
+	write(NewList).
