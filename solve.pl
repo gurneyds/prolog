@@ -45,7 +45,8 @@ move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
   write('Row = '), write(Row),
   write(' Col = '), write(Col),
   write(' Found open'),
-  append(List, [[Row,Col]], AppendedList),
+%  append(List, [[Row,Col]], AppendedList),
+  saveUniquePosition(List, AppendedList, Row, Col),
   write(' Moving down'), nl,
   NextRow is Row + 1,
   move(Maze, AppendedList, NewList, NextRow, Col, GoalRow, GoalColumn).
@@ -57,7 +58,8 @@ move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
     write('Row = '), write(Row),
     write(' Col = '), write(Col),
     write(' Found open'),
-    append(List, [[Row,Col]], AppendedList),
+%    append(List, [[Row,Col]], AppendedList),
+    saveUniquePosition(List, AppendedList, Row, Col),
     write(' moving right'), nl,
     NextCol is Col + 1,
     move(Maze, AppendedList, NewList, Row, NextCol, GoalRow, GoalColumn).
@@ -90,6 +92,15 @@ move(Maze, List, NewList, Row, Col, GoalRow, GoalColumn) :-
   R2 is Row - 1,
   write(' moving up'), nl,
   move(Maze, List, NewList, R2, Col, GoalRow, GoalColumn).
+
+%----------------------
+% If the Row/Col is not on the list then save it
+saveUniquePosition(List, NewList, Row, Col) :-
+  not(member([Row,Col], List)),
+  append(List, [[Row,Col]], NewList).
+
+saveUniquePosition(List, _, Row, Col) :-
+  member([Row,Col], List). % Do not append the item
 
 %----------------------
 % Helper predicate, return true if barrier is at Row, Col
