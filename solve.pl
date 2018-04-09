@@ -4,25 +4,33 @@
 
 % Try a move in an "Up" direction, assumes Row and Column are bound.
 
-% Move up
-%try(Row, Col, NextRow, NextCol) :-
-%  NextRow is Row - 1,
-%  NextCol is Col.
+% If open, return up
+try(Maze, Row, Col, NextRow, NextCol) :-
+  maze(Maze, Row, Col, Status),
+  Status == open,
+  NextRow is Row - 1,
+  NextCol is Col.
 
-% Move down
-%try(Row, Col, NextRow, NextCol) :-
-%  NextRow is Row + 1,
-%  NextCol is Col - 1.
+% if open, return down
+try(Maze, Row, Col, NextRow, NextCol) :-
+  maze(Maze, Row, Col, Status),
+  Status == open,
+  NextRow is Row + 1,
+  NextCol is Col.
 
-% Move right
-%try(Row, Col, NextRow, NextCol) :-
-%  NextRow is Row,
-%  NextCol is Col + 1.
+% if open, return right
+try(Maze, Row, Col, NextRow, NextCol) :-
+  maze(Maze, Row, Col, Status),
+  Status == open,
+  NextRow is Row,
+  NextCol is Col + 1.
 
-% Move left
-%try(Row, Col, NextRow, NextCol) :-
-%  NextRow is Row,
-%  NextCol is Col - 1.
+% if open, return left
+try(Maze, Row, Col, NextRow, NextCol) :-
+  maze(Maze, Row, Col, Status),
+  Status == open,
+  NextRow is Row,
+  NextCol is Col - 1.
 
 
 % move(Maze, List, NewList, Row, Column, GoalRow, GoalColumn) - moves,
